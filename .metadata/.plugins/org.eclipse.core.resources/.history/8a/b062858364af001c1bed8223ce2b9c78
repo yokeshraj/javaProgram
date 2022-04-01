@@ -1,0 +1,31 @@
+package com.webservice.restful.webservice.user;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class UserResource {
+	@Autowired
+	private UserDao dao;
+	@GetMapping("/users")
+	public List<User> retriveAllUser() {
+		return dao.findAll();
+	}
+	@GetMapping("/users/{id}")
+public User retriveUser(@PathVariable int id) {
+	return dao.findOne(id);
+}
+	@PostMapping("/users")
+	public String createUser(@RequestBody User user) {
+User savedUser=dao.save(user);
+return "Data saved successfully";
+	}
+	
+	
+}

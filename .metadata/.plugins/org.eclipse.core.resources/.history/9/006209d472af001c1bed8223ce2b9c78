@@ -1,0 +1,5 @@
+package com.webservice.restful.webservice.user;
+
+public class UserNotFoundException extends RuntimeException {
+
+}

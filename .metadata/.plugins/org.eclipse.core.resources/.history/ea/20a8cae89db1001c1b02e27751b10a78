@@ -1,0 +1,47 @@
+package com.webservice.restful.webservice.helloworld;
+
+import java.util.Locale;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+//controller
+@RestController
+public class HelloWorld {
+	//it is used to connect with the message.properties
+	@Autowired
+	private MessageSource messagesource;
+	@RequestMapping(path = "/helloworld")
+	public String helloWorld() {
+		return "hello world123";
+	}
+
+	@RequestMapping(path = "/helloworld-bean")
+	public helloWorldBean helloWorldBean() {
+		return new helloWorldBean("hello world123");
+	}
+
+	// localhost:8080/helloworld/path%20variable/yokesh
+	// we can also use helloWorld Bean instead of String like previous one
+	@RequestMapping(path = "/helloworld/path variable/{name}")
+	public String helloWorldPathVariable(@PathVariable String name) {
+		return (String.format("hello world123,%s", name));
+
+	}
+//internationalized for different country people
+	@RequestMapping(path = "/helloworld-internationalized")
+	public String helloWorldInternationalized( 
+			//for multi lingual purpose we have option in postman->headers->accept language 
+		//@RequestHeader(name="Accept-Language",required=false)Locale locale->instead of this line i used default LocalContextHolder.getLocale()
+		) {
+		return messagesource.getMessage("good.morning.message",null,"default message",LocaleContextHolder.getLocale() );
+		//return "hello world";
+	}
+}
+

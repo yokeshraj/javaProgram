@@ -1,0 +1,58 @@
+package com.webservice.restful.webservice.user;
+
+import java.net.URI;
+import java.util.List;
+
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+@RestController
+public class UserResource {
+	@Autowired
+	private UserDao dao;
+	private User savedUser;
+
+	@GetMapping("/users")
+	public List<User> retriveAllUser() {
+		return dao.findAll();
+	}
+
+	@GetMapping("/users/{id}")
+	//we use hateoas for that we added particulars like entitymodel
+	public EntityModel<User> retriveUser(@PathVariable int id) {
+		User user = dao.findOne(id);
+		if (user == null)
+			throw new UserNotFoundException("id-" + id);
+		return user;
+	}
+
+	@DeleteMapping("/users/{id}")
+	public void DeleteUser(@PathVariable int id) {
+		User user = dao.deleteById(id);
+		if (user == null)
+			throw new UserNotFoundException("id-" + id);
+	}
+
+	@PostMapping("/users")
+	// for validation purpose -@valid(i added dependency in pom.xml)
+	public ResponseEntity<Object> createUser(@Valid @RequestBody User user) {
+		User savedUser = dao.save(user);
+
+		// whenever client want to see where data is stored
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedUser.getId())
+				.toUri();
+		return ResponseEntity.created(location).build();
+
+	}
+
+}

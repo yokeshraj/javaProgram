@@ -1,0 +1,5 @@
+package exception;
+
+public class CustomizedException extends Response{
+
+}

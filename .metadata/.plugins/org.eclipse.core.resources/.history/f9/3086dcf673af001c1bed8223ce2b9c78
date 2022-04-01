@@ -1,0 +1,9 @@
+package com.webservice.restful.webservice.user;
+
+public class UserNotFoundException extends RuntimeException {
+
+	public UserNotFoundException(String string) {
+		// TODO Auto-generated constructor stub
+	}
+
+}
